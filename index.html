@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -8,19 +8,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <a class="skip-link" href="#boards">Pular para as pranchas</a>
-  <nav class="topbar wrap" aria-label="Navegação principal"><a class="brand" href="#">CASA / <span>ESCOLHAS</span></a><a class="ranking-link" href="#results">Ver ranking &#8599;</a></nav>
-  <header class="hero">
-    <div class="wrap hero-inner">
+  <nav class="navbar topbar wrap" aria-label="Navegação principal"><a class="navbar-item brand" href="#">CASA / <span>ESCOLHAS</span></a><a class="button is-primary is-light is-rounded" href="#results">Ver ranking &#8599;</a></nav>
+  <header class="hero poll-hero">
+    <div class="hero-body wrap hero-inner">
       <div>
         <span class="eyebrow">TAPETES PARA COZINHA &middot; 14 OP&Ccedil;&Otilde;ES</span>
-        <h1>Sua cozinha.<br>Sua escolha.</h1>
+        <h1 class="title hero-title">Sua cozinha.<br>Sua escolha.</h1>
         <p>Qual prancha combina mais com você? Toque no coração das suas favoritas. Pode escolher mais de uma.</p>
       </div>
-      <div class="stats" aria-live="polite">
+      <div class="box stats" aria-live="polite">
         <strong id="totalVotes">0</strong>
         <span>curtidas registradas</span>
       </div>
@@ -30,21 +31,21 @@
   <main class="wrap">
     <section class="toolbar">
       <div class="status" id="status" role="status">Carregando votos…</div>
-      <button class="ghost" id="refreshBtn" type="button">Atualizar resultados</button>
+      <button class="button is-primary is-outlined" id="refreshBtn" type="button">Atualizar resultados</button>
     </section>
 
-    <div class="collection-head"><h2>Escolha suas favoritas</h2><p>Toque na imagem para ver os detalhes.</p></div>
-    <section class="grid" id="boards" aria-label="Pranchas para votação"></section>
+    <div class="collection-head"><h2 class="title is-4 mb-2">Escolha suas favoritas</h2><p>Toque na imagem para ver os detalhes.</p></div>
+    <section class="columns is-multiline is-variable is-4" id="boards" aria-label="Pranchas para votação"></section>
 
-    <section class="ranking-card" id="results" aria-labelledby="rankingTitle">
+    <section class="box ranking-card" id="results" aria-labelledby="rankingTitle">
       <div class="ranking-head">
         <div>
           <span class="eyebrow">RESULTADO</span>
-          <h2 id="rankingTitle">As mais curtidas</h2>
+          <h2 class="title is-4 mb-0" id="rankingTitle">As mais curtidas</h2>
         </div>
         <span class="small">Atualiza a cada 20 segundos</span>
       </div>
-      <div id="ranking" class="ranking"></div>
+      <div id="ranking" class="panel is-shadowless ranking"></div>
     </section>
   </main>
 
@@ -53,7 +54,7 @@
     <img id="dialogImage" alt="Visualização ampliada da prancha" />
   </dialog>
 
-  <footer class="wrap footer">
+  <footer class="wrap poll-footer">
     <p>Votação pública por link. Não é necessário login.</p>
   </footer>
 

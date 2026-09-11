@@ -27,20 +27,22 @@ const closeDialog = document.querySelector('#closeDialog');
 
 function renderCards() {
   boardsEl.innerHTML = BOARDS.map(board => `
-    <article class="card" data-board="${board.id}">
-      <button type="button" class="image-wrap" data-open="${board.image}" aria-label="Ampliar ${board.title}">
+    <div class="column is-half-tablet is-one-third-desktop">
+    <article class="card board-card" data-board="${board.id}">
+      <button type="button" class="card-image image-wrap" data-open="${board.image}" aria-label="Ampliar ${board.title}">
         <img src="${board.image}" alt="${board.title}" loading="${board.id <= 2 ? 'eager' : 'lazy'}" decoding="async" width="1055" height="1491" />
-        <span class="badge">${String(board.id).padStart(2, '0')}</span>
-        <span class="zoom-hint" aria-hidden="true">Ampliar &#8599;</span>
+        <span class="tag is-primary badge">${String(board.id).padStart(2, '0')}</span>
+        <span class="tag is-white zoom-hint" aria-hidden="true">Ampliar &#8599;</span>
       </button>
-      <div class="card-foot">
+      <div class="card-content card-foot">
         <div class="board-title">${board.title}</div>
-        <button class="like-btn" data-like="${board.id}" type="button" aria-label="Curtir ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
+        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Curtir ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
           <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Curtir</span>
           <span class="count">0</span>
         </button>
       </div>
     </article>
+    </div>
   `).join('');
 
   document.querySelectorAll('[data-open]').forEach(el => el.addEventListener('click', () => {
@@ -61,6 +63,7 @@ function renderCounts() {
     if (btn) {
       btn.querySelector('.count').textContent = count;
       btn.classList.toggle('liked', state.voted.has(board.id));
+      btn.classList.toggle('is-outlined', !state.voted.has(board.id));
       btn.querySelector('.vote-label').textContent = state.voted.has(board.id) ? 'Curtida' : 'Curtir';
       btn.setAttribute('aria-label', `${state.voted.has(board.id) ? 'Remover curtida de' : 'Curtir'} ${board.title}, ${count} curtidas`);
       btn.setAttribute('aria-pressed', state.voted.has(board.id) ? 'true' : 'false');
@@ -70,10 +73,10 @@ function renderCounts() {
 
   const sorted = [...BOARDS].sort((a, b) => (state.counts[b.id] || 0) - (state.counts[a.id] || 0) || a.id - b.id);
   rankingEl.innerHTML = sorted.map((board, index) => `
-    <div class="rank-row">
+    <div class="panel-block rank-row">
       <div class="rank-pos">#${index + 1}</div>
       <div class="rank-name">${board.title}</div>
-      <div class="rank-votes">${state.counts[board.id] || 0} ♥</div>
+      <div class="tag is-primary is-light rank-votes">${state.counts[board.id] || 0} ♥</div>
     </div>
   `).join('');
 }
