@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
-  <link rel="stylesheet" href="styles.css?v=09a122c1c79d" />
+  <link rel="stylesheet" href="styles.css?v=2add567fddb1" />
 </head>
 <body>
   <a class="skip-link" href="#boards">Pular para as pranchas</a>
@@ -51,11 +51,15 @@
 
   <dialog id="imageDialog" class="lightbox" aria-labelledby="galleryTitle" aria-describedby="galleryHint">
     <header class="gallery-header">
-      <div><h2 id="galleryTitle">Pranchas ampliadas</h2><p id="galleryHint">Role para cima ou para baixo para ver outras pranchas.</p></div>
+      <div><h2 id="galleryTitle">Pranchas ampliadas</h2><p id="galleryHint">Deslize para os lados para ver outras pranchas.</p></div>
       <button id="closeDialog" class="close" type="button" aria-label="Fechar galeria" autofocus>&times;</button>
     </header>
     <p id="galleryStatus" class="gallery-status" role="status"></p>
     <div id="galleryBoards" class="gallery-boards" tabindex="0" aria-label="Galeria de pranchas"></div>
+    <nav class="gallery-navigation" aria-label="Navegar entre pranchas">
+      <button id="previousBoard" class="button is-primary is-outlined" type="button" aria-controls="galleryBoards">&larr; Anterior</button>
+      <button id="nextBoard" class="button is-primary is-outlined" type="button" aria-controls="galleryBoards">Pr&oacute;xima &rarr;</button>
+    </nav>
   </dialog>
 
   <footer class="wrap poll-footer">
@@ -64,6 +68,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=4c78e776fcb7"></script>
-  <script src="app.js?v=dfe78a3cd883"></script>
+  <script src="app.js?v=5fa9e1816268"></script>
 </body>
 </html>

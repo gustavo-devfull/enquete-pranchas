@@ -81,9 +81,11 @@ body:has(dialog[open]) { overflow: hidden; }
 .gallery-header p { font-size: 14px; color: #51675f; }
 .gallery-status { background: #fff3f1; color: #a12721; padding: 12px 16px; font-size: 14px; }
 .gallery-status:empty { display: none; }
-.gallery-boards { position: relative; min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior-y: contain; padding-bottom: env(safe-area-inset-bottom); }
-.gallery-board { position: relative; background: white; margin-bottom: 24px; }
-.gallery-board:last-child { margin-bottom: 0; }
+.gallery-boards { position: relative; display: flex; min-height: 0; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+.gallery-board { position: relative; background: white; flex: 0 0 100%; min-width: 0; height: 100%; overflow-y: auto; overscroll-behavior-y: contain; scroll-snap-align: start; scroll-snap-stop: always; }
 .gallery-board-bar { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 16px; background: white; border-bottom: 1px solid #dbe6e2; }
 .gallery-position { font-size: 14px; color: #51675f; font-weight: 400; }
 .gallery-board img { width: 100%; height: auto; }
+
+.gallery-navigation { display: flex; flex-shrink: 0; justify-content: space-between; gap: 12px; padding: 12px 16px max(12px, env(safe-area-inset-bottom)); background: white; border-top: 1px solid #dbe6e2; }
+.gallery-navigation .button { font-size: 14px; }
