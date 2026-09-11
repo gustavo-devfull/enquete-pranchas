@@ -11,41 +11,44 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#boards">Pular para as pranchas</a>
+  <nav class="topbar wrap" aria-label="Navegação principal"><a class="brand" href="#">CASA / <span>ESCOLHAS</span></a><a class="ranking-link" href="#results">Ver ranking &#8599;</a></nav>
   <header class="hero">
     <div class="wrap hero-inner">
       <div>
-        <span class="eyebrow">ENQUETE</span>
-        <h1>Qual prancha você mais gosta?</h1>
-        <p>Você pode curtir quantas opções quiser. Cada prancha aceita 1 voto por navegador.</p>
+        <span class="eyebrow">TAPETES PARA COZINHA &middot; 14 OP&Ccedil;&Otilde;ES</span>
+        <h1>Sua cozinha.<br>Sua escolha.</h1>
+        <p>Qual prancha combina mais com você? Toque no coração das suas favoritas. Pode escolher mais de uma.</p>
       </div>
       <div class="stats" aria-live="polite">
         <strong id="totalVotes">0</strong>
-        <span>likes registrados</span>
+        <span>curtidas registradas</span>
       </div>
     </div>
   </header>
 
   <main class="wrap">
     <section class="toolbar">
-      <div class="status" id="status">Carregando votos…</div>
+      <div class="status" id="status" role="status">Carregando votos…</div>
       <button class="ghost" id="refreshBtn" type="button">Atualizar resultados</button>
     </section>
 
+    <div class="collection-head"><h2>Escolha suas favoritas</h2><p>Toque na imagem para ver os detalhes.</p></div>
     <section class="grid" id="boards" aria-label="Pranchas para votação"></section>
 
-    <section class="ranking-card">
+    <section class="ranking-card" id="results" aria-labelledby="rankingTitle">
       <div class="ranking-head">
         <div>
           <span class="eyebrow">RESULTADO</span>
-          <h2>Ranking em tempo real</h2>
+          <h2 id="rankingTitle">As mais curtidas</h2>
         </div>
-        <span class="small">Atualiza automaticamente</span>
+        <span class="small">Atualiza a cada 20 segundos</span>
       </div>
       <div id="ranking" class="ranking"></div>
     </section>
   </main>
 
-  <dialog id="imageDialog" class="lightbox">
+  <dialog id="imageDialog" class="lightbox" aria-label="Prancha ampliada">
     <button id="closeDialog" class="close" aria-label="Fechar">×</button>
     <img id="dialogImage" alt="Visualização ampliada da prancha" />
   </dialog>
