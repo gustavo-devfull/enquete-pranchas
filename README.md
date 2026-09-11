@@ -10,6 +10,13 @@ Site HTML responsivo com 14 tapetes de cozinha, usado pela Ravi para decidir qua
 - Os votos são compartilhados entre todos os visitantes via Supabase.
 - O ranking é atualizado automaticamente a cada 20 segundos.
 
+## Painel administrativo
+Acesse `admin.html` por link direto (não há link na enquete). Lá é possível adicionar, editar, reordenar, ocultar e excluir tapetes, com upload de imagem para o Storage do Supabase.
+
+- Login por e-mail e senha (Supabase Auth). No primeiro acesso, use "Primeiro acesso: criar senha" e confirme pelo e-mail.
+- Só e-mails cadastrados na tabela `admin_users` conseguem alterar dados; qualquer outro login é recusado.
+- Para autorizar mais alguém: `insert into public.admin_users (email) values ('pessoa@exemplo.com');`
+
 ## Backend
 Execute `supabase.sql` em um projeto Supabase.
 Depois preencha `config.js` com a URL e a publishable key do projeto.

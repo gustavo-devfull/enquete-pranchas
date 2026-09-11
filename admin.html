@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Admin • Enquete Ravi</title>
+  <link rel="icon" href="images/Logo-Ravi-Azul-Escuro.png" />
+  <meta name="theme-color" content="#004f89" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+  <link rel="stylesheet" href="styles.css?v=b678bb86a371" />
+  <link rel="stylesheet" href="admin.css?v=778c67c12eb9" />
+</head>
+<body>
+  <nav class="navbar topbar wrap" aria-label="Navegação principal">
+    <a class="navbar-item brand" href="admin.html"><img class="brand-logo" src="images/Logo-Ravi-Azul-Escuro.png" alt="Ravi" width="1080" height="899" /><span>ADMIN</span></a>
+    <div class="topbar-actions">
+      <a class="button is-primary is-light is-rounded" href="index.html">Ver enquete &#8599;</a>
+      <button class="button is-light is-rounded" id="logoutBtn" type="button" hidden>Sair</button>
+    </div>
+  </nav>
+
+  <main class="wrap admin-main">
+    <section class="box auth-card" id="authCard">
+      <span class="eyebrow">ACESSO RESTRITO</span>
+      <h1 class="title is-4">Entrar no painel</h1>
+      <p class="small mb-4">Use o e-mail cadastrado como administrador da enquete.</p>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label class="label" for="email">E-mail</label>
+          <div class="control"><input class="input" id="email" type="email" autocomplete="username" required /></div>
+        </div>
+        <div class="field">
+          <label class="label" for="password">Senha</label>
+          <div class="control"><input class="input" id="password" type="password" autocomplete="current-password" minlength="6" required /></div>
+        </div>
+        <p class="error auth-error" id="authError" role="alert"></p>
+        <div class="buttons">
+          <button class="button is-primary" id="loginBtn" type="submit">Entrar</button>
+          <button class="button is-primary is-outlined" id="signupBtn" type="button">Primeiro acesso: criar senha</button>
+        </div>
+      </form>
+    </section>
+
+    <div id="panel" hidden>
+      <header class="admin-head">
+        <div>
+          <span class="eyebrow">TAPETES DA ENQUETE</span>
+          <h1 class="title is-4 mb-1">Gerenciar tapetes</h1>
+          <p class="small" id="adminUser"></p>
+        </div>
+        <div class="status" id="status" role="status"></div>
+      </header>
+
+      <section class="box add-card" aria-labelledby="addTitle">
+        <h2 class="title is-5" id="addTitle">Adicionar tapete</h2>
+        <form id="addForm" class="add-form" novalidate>
+          <div class="field">
+            <label class="label" for="newTitle">Nome</label>
+            <div class="control"><input class="input" id="newTitle" type="text" maxlength="80" placeholder="Ex.: Tapete cozinha 15" required /></div>
+          </div>
+          <div class="field">
+            <label class="label" for="newImage">Imagem (JPG, PNG ou WebP, até 8 MB)</label>
+            <div class="control"><input class="input file-input-plain" id="newImage" type="file" accept="image/jpeg,image/png,image/webp" required /></div>
+          </div>
+          <div class="field add-submit">
+            <button class="button is-primary" id="addBtn" type="submit">Adicionar</button>
+          </div>
+        </form>
+      </section>
+
+      <section aria-labelledby="listTitle">
+        <div class="collection-head">
+          <h2 class="title is-5 mb-1" id="listTitle">Tapetes cadastrados</h2>
+          <p>Edite o nome, troque a imagem, reordene ou oculte da enquete. Excluir apaga também os votos do tapete.</p>
+        </div>
+        <div id="boardList" class="board-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="wrap poll-footer">
+    <p>Painel administrativo da enquete Ravi.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js?v=4c78e776fcb7"></script>
+  <script src="admin.js?v=bcdfb3bf1a03"></script>
+</body>
+</html>

@@ -1,8 +1,10 @@
-const BOARDS = Array.from({ length: 14 }, (_, i) => ({
+// Lista usada apenas quando o backend não está configurado
+const FALLBACK_BOARDS = Array.from({ length: 14 }, (_, i) => ({
   id: i + 1,
   title: `Tapete cozinha ${String(i + 1).padStart(2, '0')}`,
   image: `images/prancha-${String(i + 1).padStart(2, '0')}.jpg`
 }));
+let BOARDS = FALLBACK_BOARDS;
 
 const config = window.POLL_CONFIG || {};
 const hasConfig = config.supabaseUrl && config.supabaseKey && !config.supabaseUrl.includes('__SUPABASE');
@@ -26,18 +28,29 @@ const galleryEl = document.querySelector('#galleryBoards');
 const galleryStatus = document.querySelector('#galleryStatus');
 const closeDialog = document.querySelector('#closeDialog');
 
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+async function loadBoards() {
+  if (!client) return;
+  const { data, error } = await client.from('boards').select('id,title,image_url,position').eq('active', true).order('position').order('id');
+  if (error) { console.error(error); return; }
+  if (data.length) BOARDS = data.map(row => ({ id: row.id, title: row.title, image: row.image_url }));
+}
+
 function renderCards() {
-  boardsEl.innerHTML = BOARDS.map(board => `
+  boardsEl.innerHTML = BOARDS.map((board, index) => `
     <div class="column is-half-tablet is-one-third-desktop">
     <article class="card board-card" data-board="${board.id}">
-      <button type="button" class="card-image image-wrap" data-open="${board.id}" aria-label="Ampliar ${board.title}">
-        <img src="${board.image}" alt="${board.title}" loading="${board.id <= 2 ? 'eager' : 'lazy'}" decoding="async" width="1055" height="1491" />
-        <span class="tag is-primary badge">${String(board.id).padStart(2, '0')}</span>
+      <button type="button" class="card-image image-wrap" data-open="${board.id}" aria-label="Ampliar ${escapeHtml(board.title)}">
+        <img src="${escapeHtml(board.image)}" alt="${escapeHtml(board.title)}" loading="${index < 2 ? 'eager' : 'lazy'}" decoding="async" width="1055" height="1491" />
+        <span class="tag is-primary badge">${String(index + 1).padStart(2, '0')}</span>
         <span class="tag is-white zoom-hint" aria-hidden="true">Ampliar &#8599;</span>
       </button>
       <div class="card-content card-foot">
-        <div class="board-title">${board.title}</div>
-        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Votar em ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
+        <div class="board-title">${escapeHtml(board.title)}</div>
+        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Votar em ${escapeHtml(board.title)}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
           <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Quero este</span>
           <span class="count">0</span>
         </button>
@@ -46,15 +59,15 @@ function renderCards() {
     </div>
   `).join('');
 
-  galleryEl.innerHTML = BOARDS.map(board => `
+  galleryEl.innerHTML = BOARDS.map((board, index) => `
     <article class="gallery-board" id="gallery-board-${board.id}" aria-labelledby="gallery-name-${board.id}">
       <div class="gallery-board-bar">
-        <h3 id="gallery-name-${board.id}" class="board-title">${board.title} <span class="gallery-position">/ 14</span></h3>
-        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Votar em ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
+        <h3 id="gallery-name-${board.id}" class="board-title">${escapeHtml(board.title)} <span class="gallery-position">${index + 1} / ${BOARDS.length}</span></h3>
+        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Votar em ${escapeHtml(board.title)}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
           <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Quero este</span><span class="count">0</span>
         </button>
       </div>
-      <img src="${board.image}" alt="Detalhes de ${board.title}" loading="lazy" decoding="async" width="1055" height="1491" />
+      <img src="${escapeHtml(board.image)}" alt="Detalhes de ${escapeHtml(board.title)}" loading="lazy" decoding="async" width="1055" height="1491" />
     </article>
   `).join('');
 
@@ -93,7 +106,7 @@ function renderCounts() {
   rankingEl.innerHTML = sorted.map((board, index) => `
     <div class="panel-block rank-row">
       <div class="rank-pos">#${index + 1}</div>
-      <div class="rank-name">${board.title}</div>
+      <div class="rank-name">${escapeHtml(board.title)}</div>
       <div class="tag is-primary is-light rank-votes">${state.counts[board.id] || 0} ♥</div>
     </div>
   `).join('');
@@ -114,7 +127,9 @@ async function loadVotes() {
   }
   state.counts = {};
   state.voted.clear();
+  const knownIds = new Set(BOARDS.map(board => board.id));
   for (const row of data) {
+    if (!knownIds.has(row.board_id)) continue;
     state.counts[row.board_id] = (state.counts[row.board_id] || 0) + 1;
     if (row.voter_id === voterId) state.voted.add(row.board_id);
   }
@@ -162,7 +177,7 @@ function updateGalleryNavigation() {
 function navigateGallery(direction) {
   const index = Math.round(galleryEl.scrollLeft / (galleryEl.clientWidth || 1));
   const next = Math.max(0, Math.min(BOARDS.length - 1, index + direction));
-  const selected = document.querySelector(`#gallery-board-${next + 1}`);
+  const selected = galleryEl.children[next];
   selected.scrollTop = 0;
   galleryEl.scrollTo({ left: selected.offsetLeft, behavior: 'instant' });
   updateGalleryNavigation();
@@ -181,6 +196,9 @@ refreshBtn.addEventListener('click', loadVotes);
 closeDialog.addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
 
-renderCards();
-loadVotes();
-setInterval(loadVotes, 20000);
+(async () => {
+  await loadBoards();
+  renderCards();
+  loadVotes();
+  setInterval(loadVotes, 20000);
+})();
