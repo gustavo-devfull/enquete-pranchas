@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Enquete das pranchas de tapetes para cozinha" />
+  <title>Enquete • Pranchas de Tapetes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap hero-inner">
+      <div>
+        <span class="eyebrow">ENQUETE</span>
+        <h1>Qual prancha você mais gosta?</h1>
+        <p>Você pode curtir quantas opções quiser. Cada prancha aceita 1 voto por navegador.</p>
+      </div>
+      <div class="stats" aria-live="polite">
+        <strong id="totalVotes">0</strong>
+        <span>likes registrados</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar">
+      <div class="status" id="status">Carregando votos…</div>
+      <button class="ghost" id="refreshBtn" type="button">Atualizar resultados</button>
+    </section>
+
+    <section class="grid" id="boards" aria-label="Pranchas para votação"></section>
+
+    <section class="ranking-card">
+      <div class="ranking-head">
+        <div>
+          <span class="eyebrow">RESULTADO</span>
+          <h2>Ranking em tempo real</h2>
+        </div>
+        <span class="small">Atualiza automaticamente</span>
+      </div>
+      <div id="ranking" class="ranking"></div>
+    </section>
+  </main>
+
+  <dialog id="imageDialog" class="lightbox">
+    <button id="closeDialog" class="close" aria-label="Fechar">×</button>
+    <img id="dialogImage" alt="Visualização ampliada da prancha" />
+  </dialog>
+
+  <footer class="wrap footer">
+    <p>Votação pública por link. Não é necessário login.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

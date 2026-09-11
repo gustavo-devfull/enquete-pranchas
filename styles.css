@@ -1,0 +1,53 @@
+:root{
+  --bg:#f5f5f4;
+  --card:#fff;
+  --text:#151515;
+  --muted:#6e6e6e;
+  --line:#e6e6e3;
+  --accent:#111;
+  --heart:#e5484d;
+  --shadow:0 14px 34px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+button{font:inherit}
+.wrap{width:min(1180px,calc(100% - 32px));margin-inline:auto}
+.hero{background:#111;color:#fff;padding:46px 0 40px}
+.hero-inner{display:flex;justify-content:space-between;gap:36px;align-items:flex-end}
+.eyebrow{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.14em;opacity:.65;margin-bottom:10px}
+h1{font-size:clamp(32px,5vw,58px);line-height:1.02;margin:0 0 14px;letter-spacing:-.04em}
+.hero p{margin:0;color:#bbb;max-width:690px;line-height:1.55}
+.stats{min-width:160px;border:1px solid #333;border-radius:18px;padding:18px 20px;background:#181818}
+.stats strong{display:block;font-size:34px;line-height:1;font-weight:800}
+.stats span{display:block;color:#aaa;font-size:12px;margin-top:8px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:28px 0 18px}
+.status{font-size:13px;color:var(--muted)}
+.ghost{border:1px solid var(--line);background:#fff;color:#222;border-radius:999px;padding:10px 14px;font-weight:600;cursor:pointer}
+.ghost:hover{background:#fafafa}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.02);transition:.2s ease}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.image-wrap{position:relative;background:#eee;aspect-ratio:1055/1491;overflow:hidden;cursor:zoom-in}
+.image-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);color:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800;letter-spacing:.04em}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px}
+.board-title{font-size:15px;font-weight:700}
+.like-btn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;cursor:pointer;font-weight:700;min-width:84px;justify-content:center;transition:.18s ease}
+.like-btn:hover{border-color:#cfcfca;background:#fafafa}
+.like-btn.liked{border-color:#f0b8ba;background:#fff4f4;color:#b4232b}
+.like-btn:disabled{opacity:.5;cursor:not-allowed}
+.heart{font-size:17px;line-height:1;color:#888}.liked .heart{color:var(--heart)}
+.ranking-card{margin:36px 0;background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.02)}
+.ranking-head{display:flex;justify-content:space-between;align-items:end;gap:20px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:8px}
+.ranking-head h2{margin:0;font-size:24px;letter-spacing:-.025em}.small{font-size:12px;color:var(--muted)}
+.rank-row{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid #f0f0ee}
+.rank-row:last-child{border-bottom:0}.rank-pos{font-weight:800;color:#777}.rank-name{font-weight:650}.rank-votes{font-weight:800}
+.footer{padding:4px 0 44px;color:var(--muted);font-size:12px;text-align:center}
+.lightbox{border:0;padding:0;background:transparent;max-width:min(92vw,920px);max-height:92vh}
+.lightbox::backdrop{background:rgba(0,0,0,.82)}
+.lightbox img{display:block;max-width:100%;max-height:88vh;border-radius:16px;box-shadow:0 28px 70px rgba(0,0,0,.42)}
+.close{position:fixed;right:22px;top:18px;width:42px;height:42px;border:0;border-radius:50%;font-size:28px;line-height:1;background:#fff;color:#111;cursor:pointer;box-shadow:0 5px 20px rgba(0,0,0,.25)}
+.error{color:#b42318;font-weight:600}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-inner{align-items:flex-start}.stats{margin-top:6px}}
+@media(max-width:620px){.wrap{width:min(100% - 20px,1180px)}.hero{padding:34px 0}.hero-inner{display:block}.stats{margin-top:24px;width:max-content}.grid{grid-template-columns:1fr;gap:14px}.toolbar{align-items:flex-start}.ghost{font-size:12px}.ranking-card{padding:16px}.ranking-head{align-items:flex-start}.small{display:none}}
