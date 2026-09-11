@@ -8,7 +8,7 @@ const config = window.POLL_CONFIG || {};
 const hasConfig = config.supabaseUrl && config.supabaseKey && !config.supabaseUrl.includes('__SUPABASE');
 const client = hasConfig ? window.supabase.createClient(config.supabaseUrl, config.supabaseKey) : null;
 
-const state = { counts: {}, voted: new Set() };
+const state = { counts: {}, voted: new Set(), pending: new Set() };
 const voterKey = 'pranchas_poll_voter_id';
 let voterId = localStorage.getItem(voterKey);
 if (!voterId) {
@@ -22,14 +22,15 @@ const statusEl = document.querySelector('#status');
 const totalEl = document.querySelector('#totalVotes');
 const refreshBtn = document.querySelector('#refreshBtn');
 const dialog = document.querySelector('#imageDialog');
-const dialogImage = document.querySelector('#dialogImage');
+const galleryEl = document.querySelector('#galleryBoards');
+const galleryStatus = document.querySelector('#galleryStatus');
 const closeDialog = document.querySelector('#closeDialog');
 
 function renderCards() {
   boardsEl.innerHTML = BOARDS.map(board => `
     <div class="column is-half-tablet is-one-third-desktop">
     <article class="card board-card" data-board="${board.id}">
-      <button type="button" class="card-image image-wrap" data-open="${board.image}" aria-label="Ampliar ${board.title}">
+      <button type="button" class="card-image image-wrap" data-open="${board.id}" aria-label="Ampliar ${board.title}">
         <img src="${board.image}" alt="${board.title}" loading="${board.id <= 2 ? 'eager' : 'lazy'}" decoding="async" width="1055" height="1491" />
         <span class="tag is-primary badge">${String(board.id).padStart(2, '0')}</span>
         <span class="tag is-white zoom-hint" aria-hidden="true">Ampliar &#8599;</span>
@@ -45,10 +46,24 @@ function renderCards() {
     </div>
   `).join('');
 
+  galleryEl.innerHTML = BOARDS.map(board => `
+    <article class="gallery-board" id="gallery-board-${board.id}" aria-labelledby="gallery-name-${board.id}">
+      <div class="gallery-board-bar">
+        <h3 id="gallery-name-${board.id}" class="board-title">${board.title} <span class="gallery-position">/ 14</span></h3>
+        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Curtir ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
+          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Curtir</span><span class="count">0</span>
+        </button>
+      </div>
+      <img src="${board.image}" alt="Detalhes de ${board.title}" loading="lazy" decoding="async" width="1055" height="1491" />
+    </article>
+  `).join('');
+
   document.querySelectorAll('[data-open]').forEach(el => el.addEventListener('click', () => {
-    dialogImage.src = el.dataset.open;
-    dialogImage.alt = el.getAttribute("aria-label").replace("Ampliar", "Detalhes de");
     dialog.showModal();
+    const selected = document.querySelector(`#gallery-board-${el.dataset.open}`);
+    galleryEl.scrollTo({ top: selected.offsetTop, behavior: 'instant' });
+    const likeButton = selected.querySelector('[data-like]');
+    (likeButton.disabled ? galleryEl : likeButton).focus({ preventScroll: true });
   }));
 
   document.querySelectorAll('[data-like]').forEach(btn => btn.addEventListener('click', () => toggleVote(Number(btn.dataset.like), btn)));
@@ -59,15 +74,16 @@ function renderCounts() {
   BOARDS.forEach(board => {
     const count = state.counts[board.id] || 0;
     total += count;
-    const btn = document.querySelector(`[data-like="${board.id}"]`);
-    if (btn) {
+    document.querySelectorAll(`[data-like="${board.id}"]`).forEach(btn => {
+      btn.disabled = !client || state.pending.has(board.id);
+      btn.setAttribute('aria-busy', state.pending.has(board.id) ? 'true' : 'false');
       btn.querySelector('.count').textContent = count;
       btn.classList.toggle('liked', state.voted.has(board.id));
       btn.classList.toggle('is-outlined', !state.voted.has(board.id));
       btn.querySelector('.vote-label').textContent = state.voted.has(board.id) ? 'Curtida' : 'Curtir';
       btn.setAttribute('aria-label', `${state.voted.has(board.id) ? 'Remover curtida de' : 'Curtir'} ${board.title}, ${count} curtidas`);
       btn.setAttribute('aria-pressed', state.voted.has(board.id) ? 'true' : 'false');
-    }
+    });
   });
   totalEl.textContent = total;
 
@@ -105,8 +121,10 @@ async function loadVotes() {
 }
 
 async function toggleVote(boardId, btn) {
-  if (!client || btn.disabled) return;
-  btn.disabled = true;
+  if (!client || btn.disabled || state.pending.has(boardId)) return;
+  state.pending.add(boardId);
+  galleryStatus.textContent = '';
+  renderCounts();
   const alreadyVoted = state.voted.has(boardId);
   try {
     if (alreadyVoted) {
@@ -125,9 +143,11 @@ async function toggleVote(boardId, btn) {
     renderCounts();
   } catch (err) {
     console.error(err);
+    galleryStatus.textContent = 'N\u00e3o foi poss\u00edvel registrar o voto. Tente novamente.';
     statusEl.innerHTML = '<span class="error">Não foi possível registrar o voto. Tente novamente.</span>';
   } finally {
-    btn.disabled = false;
+    state.pending.delete(boardId);
+    renderCounts();
   }
 }
 

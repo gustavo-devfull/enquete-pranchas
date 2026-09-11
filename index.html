@@ -49,9 +49,13 @@
     </section>
   </main>
 
-  <dialog id="imageDialog" class="lightbox" aria-label="Prancha ampliada">
-    <button id="closeDialog" class="close" aria-label="Fechar">×</button>
-    <img id="dialogImage" alt="Visualização ampliada da prancha" />
+  <dialog id="imageDialog" class="lightbox" aria-labelledby="galleryTitle" aria-describedby="galleryHint">
+    <header class="gallery-header">
+      <div><h2 id="galleryTitle">Pranchas ampliadas</h2><p id="galleryHint">Role para cima ou para baixo para ver outras pranchas.</p></div>
+      <button id="closeDialog" class="close" type="button" aria-label="Fechar galeria" autofocus>&times;</button>
+    </header>
+    <p id="galleryStatus" class="gallery-status" role="status"></p>
+    <div id="galleryBoards" class="gallery-boards" tabindex="0" aria-label="Galeria de pranchas"></div>
   </dialog>
 
   <footer class="wrap poll-footer">
