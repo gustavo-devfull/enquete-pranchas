@@ -1,6 +1,6 @@
 const BOARDS = Array.from({ length: 14 }, (_, i) => ({
   id: i + 1,
-  title: `Prancha ${String(i + 1).padStart(2, '0')}`,
+  title: `Tapete cozinha ${String(i + 1).padStart(2, '0')}`,
   image: `images/prancha-${String(i + 1).padStart(2, '0')}.jpg`
 }));
 
@@ -37,8 +37,8 @@ function renderCards() {
       </button>
       <div class="card-content card-foot">
         <div class="board-title">${board.title}</div>
-        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Curtir ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
-          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Curtir</span>
+        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Votar em ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
+          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Quero este</span>
           <span class="count">0</span>
         </button>
       </div>
@@ -50,8 +50,8 @@ function renderCards() {
     <article class="gallery-board" id="gallery-board-${board.id}" aria-labelledby="gallery-name-${board.id}">
       <div class="gallery-board-bar">
         <h3 id="gallery-name-${board.id}" class="board-title">${board.title} <span class="gallery-position">/ 14</span></h3>
-        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Curtir ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
-          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Curtir</span><span class="count">0</span>
+        <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Votar em ${board.title}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
+          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Quero este</span><span class="count">0</span>
         </button>
       </div>
       <img src="${board.image}" alt="Detalhes de ${board.title}" loading="lazy" decoding="async" width="1055" height="1491" />
@@ -82,8 +82,8 @@ function renderCounts() {
       btn.querySelector('.count').textContent = count;
       btn.classList.toggle('liked', state.voted.has(board.id));
       btn.classList.toggle('is-outlined', !state.voted.has(board.id));
-      btn.querySelector('.vote-label').textContent = state.voted.has(board.id) ? 'Curtida' : 'Curtir';
-      btn.setAttribute('aria-label', `${state.voted.has(board.id) ? 'Remover curtida de' : 'Curtir'} ${board.title}, ${count} curtidas`);
+      btn.querySelector('.vote-label').textContent = state.voted.has(board.id) ? 'Escolhida' : 'Quero este';
+      btn.setAttribute('aria-label', `${state.voted.has(board.id) ? 'Remover voto de' : 'Votar em'} ${board.title}, ${count} votos`);
       btn.setAttribute('aria-pressed', state.voted.has(board.id) ? 'true' : 'false');
     });
   });
@@ -101,7 +101,7 @@ function renderCounts() {
 
 async function loadVotes() {
   if (!client) {
-    statusEl.innerHTML = '<span class="error">Backend ainda não configurado.</span>';
+    statusEl.innerHTML = '<span class="error">Enquete ainda não conectada ao banco de votos.</span>';
     renderCounts();
     return;
   }

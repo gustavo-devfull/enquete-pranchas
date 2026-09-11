@@ -3,27 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Enquete das pranchas de tapetes para cozinha" />
-  <title>Enquete • Pranchas de Tapetes</title>
+  <meta name="description" content="Enquete Ravi: escolha os tapetes de cozinha que vamos importar da China" />
+  <title>Enquete Ravi • Tapetes da China</title>
+  <link rel="icon" href="images/Logo-Ravi-Azul-Escuro.png" />
+  <meta name="theme-color" content="#004f89" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
-  <link rel="stylesheet" href="styles.css?v=2add567fddb1" />
+  <link rel="stylesheet" href="styles.css?v=b678bb86a371" />
 </head>
 <body>
-  <a class="skip-link" href="#boards">Pular para as pranchas</a>
-  <nav class="navbar topbar wrap" aria-label="Navegação principal"><a class="navbar-item brand" href="#">CASA / <span>ESCOLHAS</span></a><a class="button is-primary is-light is-rounded" href="#results">Ver ranking &#8599;</a></nav>
+  <a class="skip-link" href="#boards">Pular para os tapetes</a>
+  <nav class="navbar topbar wrap" aria-label="Navegação principal"><a class="navbar-item brand" href="#"><img class="brand-logo" src="images/Logo-Ravi-Azul-Escuro.png" alt="Ravi" width="1080" height="899" /><span>ESCOLHAS</span></a><a class="button is-primary is-light is-rounded" href="#results">Ver mais votados &#8599;</a></nav>
   <header class="hero poll-hero">
     <div class="hero-body wrap hero-inner">
       <div>
-        <span class="eyebrow">TAPETES PARA COZINHA &middot; 14 OP&Ccedil;&Otilde;ES</span>
-        <h1 class="title hero-title">Sua cozinha.<br>Sua escolha.</h1>
-        <p>Qual prancha combina mais com você? Toque no coração das suas favoritas. Pode escolher mais de uma.</p>
+        <span class="eyebrow">RAVI &middot; PASSADEIRA E TAPETE DE COZINHA</span>
+        <h1 class="visually-hidden">Enquete Ravi — passadeiras e tapetes de cozinha</h1>
+        <p>Estamos preparando a próxima importação de tapetes de cozinha e queremos saber quais modelos você mais gostou.</p>
+        <p>Você pode votar em quantos modelos quiser. Os mais votados poderão fazer parte da próxima coleção Ravi.</p>
       </div>
       <div class="box stats" aria-live="polite">
         <strong id="totalVotes">0</strong>
-        <span>curtidas registradas</span>
+        <span>votos registrados</span>
       </div>
     </div>
   </header>
@@ -34,14 +37,14 @@
       <button class="button is-primary is-outlined" id="refreshBtn" type="button">Atualizar resultados</button>
     </section>
 
-    <div class="collection-head"><h2 class="title is-4 mb-2">Escolha suas favoritas</h2><p>Toque na imagem para ver os detalhes.</p></div>
-    <section class="columns is-multiline is-variable is-4" id="boards" aria-label="Pranchas para votação"></section>
+    <div class="collection-head"><h2 class="title is-4 mb-2">Escolha os tapetes que a Ravi deve importar</h2><p>Toque na imagem para ver os tapetes de perto.</p></div>
+    <section class="columns is-multiline is-variable is-4" id="boards" aria-label="Tapetes de cozinha para votação"></section>
 
     <section class="box ranking-card" id="results" aria-labelledby="rankingTitle">
       <div class="ranking-head">
         <div>
           <span class="eyebrow">RESULTADO</span>
-          <h2 class="title is-4 mb-0" id="rankingTitle">As mais curtidas</h2>
+          <h2 class="title is-4 mb-0" id="rankingTitle">As mais votadas para importar</h2>
         </div>
         <span class="small">Atualiza a cada 20 segundos</span>
       </div>
@@ -51,23 +54,23 @@
 
   <dialog id="imageDialog" class="lightbox" aria-labelledby="galleryTitle" aria-describedby="galleryHint">
     <header class="gallery-header">
-      <div><h2 id="galleryTitle">Pranchas ampliadas</h2><p id="galleryHint">Deslize para os lados para ver outras pranchas.</p></div>
+      <div><h2 id="galleryTitle">Tapetes em detalhe</h2><p id="galleryHint">Deslize para os lados para ver os outros tapetes.</p></div>
       <button id="closeDialog" class="close" type="button" aria-label="Fechar galeria" autofocus>&times;</button>
     </header>
     <p id="galleryStatus" class="gallery-status" role="status"></p>
-    <div id="galleryBoards" class="gallery-boards" tabindex="0" aria-label="Galeria de pranchas"></div>
-    <nav class="gallery-navigation" aria-label="Navegar entre pranchas">
+    <div id="galleryBoards" class="gallery-boards" tabindex="0" aria-label="Galeria de tapetes"></div>
+    <nav class="gallery-navigation" aria-label="Navegar entre tapetes">
       <button id="previousBoard" class="button is-primary is-outlined" type="button" aria-controls="galleryBoards">&larr; Anterior</button>
       <button id="nextBoard" class="button is-primary is-outlined" type="button" aria-controls="galleryBoards">Pr&oacute;xima &rarr;</button>
     </nav>
   </dialog>
 
   <footer class="wrap poll-footer">
-    <p>Votação pública por link. Não é necessário login.</p>
+    <p>Enquete Ravi — votação pública por link, sem login. O resultado define a próxima importação.</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=4c78e776fcb7"></script>
-  <script src="app.js?v=5fa9e1816268"></script>
+  <script src="app.js?v=326390c7b555"></script>
 </body>
 </html>

@@ -1,12 +1,12 @@
-# Enquete das Pranchas
+# Enquete Ravi — Tapetes da China
 
-Site HTML responsivo com 14 pranchas e votação pública por link.
+Site HTML responsivo com 14 tapetes de cozinha, usado pela Ravi para decidir quais modelos importar da China. Votação pública por link.
 
 ## Como funciona
 - Cada visitante recebe um identificador aleatório salvo no `localStorage` do navegador.
-- É possível curtir várias pranchas.
-- Cada prancha aceita no máximo 1 voto por navegador.
-- O usuário pode retirar o próprio like.
+- É possível votar em vários tapetes.
+- Cada tapete aceita no máximo 1 voto por navegador.
+- O usuário pode retirar o próprio voto.
 - Os votos são compartilhados entre todos os visitantes via Supabase.
 - O ranking é atualizado automaticamente a cada 20 segundos.
 
