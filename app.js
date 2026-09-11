@@ -1,7 +1,7 @@
 const BOARDS = Array.from({ length: 14 }, (_, i) => ({
   id: i + 1,
   title: `Prancha ${String(i + 1).padStart(2, '0')}`,
-  image: `images/prancha-${String(i + 1).padStart(2, '0')}.png`
+  image: `https://cdn.jsdelivr.net/gh/gustavo-devfull/enquete-pranchas@master/images/prancha-${String(i + 1).padStart(2, '0')}.jpg`
 }));
 
 const config = window.POLL_CONFIG || {};
