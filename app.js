@@ -108,15 +108,16 @@ function renderCounts() {
   submitBtn.setAttribute('aria-busy', String(state.submitting));
   refreshBtn.disabled = state.submitting || state.loading;
 
-  const sorted = [...BOARDS].sort((a, b) => (state.counts[b.id] || 0) - (state.counts[a.id] || 0) || a.id - b.id);
-  rankingEl.innerHTML = sorted.slice(0, 5).map((board, index) => `
-    <div class="panel-block rank-row">
+  const sorted = BOARDS.filter(board => (state.counts[board.id] || 0) > 0)
+    .sort((a, b) => state.counts[b.id] - state.counts[a.id] || a.id - b.id);
+  rankingEl.innerHTML = sorted.map((board, index) => `
+    <div class="rank-row">
       <div class="rank-pos">#${index + 1}</div>
       <img class="rank-image" src="${escapeHtml(board.image)}" alt="${escapeHtml(board.title)}" loading="lazy" decoding="async" width="1055" height="1491" />
       <div class="rank-name">${escapeHtml(board.title)}</div>
       <div class="tag is-primary is-light rank-votes">${state.counts[board.id] || 0} ♥</div>
     </div>
-  `).join('');
+  `).join('') || '<p class="ranking-empty">Nenhum voto registrado ainda.</p>';
 }
 
 async function loadVotes({ afterSubmit = false } = {}) {

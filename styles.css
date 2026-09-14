@@ -53,12 +53,13 @@ button:focus-visible, a:focus-visible { outline: 3px solid #bd8108; outline-offs
 .count { padding-left: 8px; border-left: 1px solid currentColor; font-variant-numeric: tabular-nums; }
 .ranking-card { margin: 32px 0 24px; padding: 28px; border: 1px solid var(--ravi-line); box-shadow: none; }
 .ranking-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; padding-bottom: 20px; }
-.ranking { margin-bottom: 0; }
-.rank-row { display: grid; grid-template-columns: 40px 96px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 14px 4px; }
+.ranking { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin-bottom: 0; }
+.rank-row { display: flex; flex-direction: column; align-items: stretch; gap: 10px; min-width: 0; padding: 12px; border: 1px solid var(--ravi-line); border-radius: 12px; }
+.ranking-empty { grid-column: 1 / -1; color: var(--ravi-muted); }
 .rank-image { display: block; width: 100%; height: auto; aspect-ratio: 1055 / 1491; object-fit: contain; border-radius: 8px; background: var(--ravi-soft); }
 .rank-pos { color: var(--ravi-muted); font-weight: 600; }
 .rank-name { font-weight: 600; overflow-wrap: anywhere; }
-.rank-votes { font-size: 14px; font-weight: 700; }
+.rank-votes { align-self: flex-start; margin-top: auto; font-size: 14px; font-weight: 700; }
 .poll-footer { padding-bottom: max(28px, env(safe-area-inset-bottom)); text-align: center; font-size: 14px; color: var(--ravi-muted); }
 .lightbox { margin: auto; padding: 0; border: 0; background: #eef4f9; width: min(920px, 100vw); max-width: 100vw; height: 100dvh; max-height: 100dvh; overflow: hidden; }
 .lightbox::backdrop { background: #032039ed; }
@@ -66,6 +67,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid #bd8108; outline-offs
 .close { flex: 0 0 48px; width: 48px; height: 48px; border: 1px solid var(--ravi-line); border-radius: 50%; background: white; color: var(--ravi-dark); font-size: 28px; cursor: pointer; }
 .error { color: #a12721; font-weight: 600; }
 body:has(dialog[open]) { overflow: hidden; }
+@media (max-width: 1023px) { .ranking { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 768px) {
   .wrap { width: calc(100% - 32px); }
   .topbar { min-height: 72px; gap: 8px; }
@@ -83,8 +85,10 @@ body:has(dialog[open]) { overflow: hidden; }
   .ranking-card { padding: 20px 16px; }
   .ranking-head { display: block; }
   .small { display: block; margin-top: 8px; }
-  .rank-row { grid-template-columns: 24px 64px minmax(0, 1fr) auto; gap: 8px; }
+  .ranking { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .rank-row { padding: 10px; gap: 8px; }
 }
+@media (max-width: 359px) { .ranking { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 .lightbox[open] { display: flex; flex-direction: column; }
