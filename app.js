@@ -109,9 +109,10 @@ function renderCounts() {
   refreshBtn.disabled = state.submitting || state.loading;
 
   const sorted = [...BOARDS].sort((a, b) => (state.counts[b.id] || 0) - (state.counts[a.id] || 0) || a.id - b.id);
-  rankingEl.innerHTML = sorted.map((board, index) => `
+  rankingEl.innerHTML = sorted.slice(0, 5).map((board, index) => `
     <div class="panel-block rank-row">
       <div class="rank-pos">#${index + 1}</div>
+      <img class="rank-image" src="${escapeHtml(board.image)}" alt="${escapeHtml(board.title)}" loading="lazy" decoding="async" width="1055" height="1491" />
       <div class="rank-name">${escapeHtml(board.title)}</div>
       <div class="tag is-primary is-light rank-votes">${state.counts[board.id] || 0} ♥</div>
     </div>
@@ -231,7 +232,6 @@ document.querySelector('#previousBoard').addEventListener('click', () => navigat
 document.querySelector('#nextBoard').addEventListener('click', () => navigateGallery(1));
 refreshBtn.addEventListener('click', () => loadVotes());
 submitBtn.addEventListener('click', submitVotes);
-document.querySelector('#viewResults').addEventListener('click', () => { resultsEl.hidden = false; });
 closeDialog.addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
 

@@ -54,9 +54,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid #bd8108; outline-offs
 .ranking-card { margin: 32px 0 24px; padding: 28px; border: 1px solid var(--ravi-line); box-shadow: none; }
 .ranking-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; padding-bottom: 20px; }
 .ranking { margin-bottom: 0; }
-.rank-row { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; padding: 14px 4px; }
+.rank-row { display: grid; grid-template-columns: 40px 96px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 14px 4px; }
+.rank-image { display: block; width: 100%; height: auto; aspect-ratio: 1055 / 1491; object-fit: contain; border-radius: 8px; background: var(--ravi-soft); }
 .rank-pos { color: var(--ravi-muted); font-weight: 600; }
-.rank-name { font-weight: 600; }
+.rank-name { font-weight: 600; overflow-wrap: anywhere; }
 .rank-votes { font-size: 14px; font-weight: 700; }
 .poll-footer { padding-bottom: max(28px, env(safe-area-inset-bottom)); text-align: center; font-size: 14px; color: var(--ravi-muted); }
 .lightbox { margin: auto; padding: 0; border: 0; background: #eef4f9; width: min(920px, 100vw); max-width: 100vw; height: 100dvh; max-height: 100dvh; overflow: hidden; }
@@ -82,7 +83,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .ranking-card { padding: 20px 16px; }
   .ranking-head { display: block; }
   .small { display: block; margin-top: 8px; }
-  .rank-row { grid-template-columns: 28px 1fr auto; gap: 8px; }
+  .rank-row { grid-template-columns: 24px 64px minmax(0, 1fr) auto; gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
