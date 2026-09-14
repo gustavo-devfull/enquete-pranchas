@@ -11,11 +11,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
-  <link rel="stylesheet" href="styles.css?v=b678bb86a371" />
+  <link rel="stylesheet" href="styles.css?v=20260914-votos" />
 </head>
 <body>
   <a class="skip-link" href="#boards">Pular para os tapetes</a>
-  <nav class="navbar topbar wrap" aria-label="Navegação principal"><a class="navbar-item brand" href="#"><img class="brand-logo" src="images/Logo-Ravi-Azul-Escuro.png" alt="Ravi" width="1080" height="899" /><span>ESCOLHAS</span></a><a class="button is-primary is-light is-rounded" href="#results">Ver mais votados &#8599;</a></nav>
+  <nav class="navbar topbar wrap" aria-label="Navegação principal"><a class="navbar-item brand" href="#"><img class="brand-logo" src="images/Logo-Ravi-Azul-Escuro.png" alt="Ravi" width="1080" height="899" /><span>ESCOLHAS</span></a><a class="button is-primary is-light is-rounded" id="viewResults" href="#results">Ver mais votados &#8599;</a></nav>
   <header class="hero poll-hero">
     <div class="hero-body wrap hero-inner">
       <div>
@@ -37,14 +37,19 @@
       <button class="button is-primary is-outlined" id="refreshBtn" type="button">Atualizar resultados</button>
     </section>
 
-    <div class="collection-head"><h2 class="title is-4 mb-2">Escolha os tapetes que a Ravi deve importar</h2><p>Toque na imagem para ver os tapetes de perto.</p></div>
+    <div class="collection-head"><h2 class="title is-4 mb-2">Escolha os tapetes que a Ravi deve importar</h2><p>Toque na imagem para ampliar. Marque &ldquo;Gosto&rdquo; nos seus favoritos e envie os votos no final.</p></div>
     <section class="columns is-multiline is-variable is-4" id="boards" aria-label="Tapetes de cozinha para votação"></section>
 
-    <section class="box ranking-card" id="results" aria-labelledby="rankingTitle">
+    <section class="vote-submit" aria-label="Enviar suas escolhas">
+      <button class="button is-primary is-medium" id="submitVotes" type="button" disabled>Enviar votos</button>
+      <p id="submitStatus" class="status" role="status">Selecione os modelos de que gostou antes de enviar.</p>
+    </section>
+
+    <section hidden class="box ranking-card" id="results" aria-labelledby="rankingTitle">
       <div class="ranking-head">
         <div>
           <span class="eyebrow">RESULTADO</span>
-          <h2 class="title is-4 mb-0" id="rankingTitle">As mais votadas para importar</h2>
+          <h2 class="title is-4 mb-0" id="rankingTitle" tabindex="-1">Resultados dos mais votados</h2>
         </div>
         <span class="small">Atualiza a cada 20 segundos</span>
       </div>
@@ -71,6 +76,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=4c78e776fcb7"></script>
-  <script src="app.js?v=20ae71fdc31c"></script>
+  <script src="app.js?v=20260914-votos-final"></script>
 </body>
 </html>

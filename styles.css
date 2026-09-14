@@ -100,3 +100,7 @@ body:has(dialog[open]) { overflow: hidden; }
 
 .gallery-navigation { display: flex; flex-shrink: 0; justify-content: space-between; gap: 12px; padding: 12px 16px max(12px, env(safe-area-inset-bottom)); background: white; border-top: 1px solid var(--ravi-line); }
 .gallery-navigation .button { font-size: 14px; }
+
+[hidden] { display: none !important; }
+.vote-submit { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px 0 32px; text-align: center; }
+.vote-submit .button { width: min(100%, 360px); }

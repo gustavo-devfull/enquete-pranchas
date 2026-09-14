@@ -10,7 +10,7 @@ const config = window.POLL_CONFIG || {};
 const hasConfig = config.supabaseUrl && config.supabaseKey && !config.supabaseUrl.includes('__SUPABASE');
 const client = hasConfig ? window.supabase.createClient(config.supabaseUrl, config.supabaseKey) : null;
 
-const state = { counts: {}, voted: new Set(), pending: new Set() };
+const state = { counts: {}, voted: new Set(), selected: new Set(), ready: false, dirty: false, submitting: false, submitted: false, loading: false };
 const voterKey = 'pranchas_poll_voter_id';
 let voterId = localStorage.getItem(voterKey);
 if (!voterId) {
@@ -23,6 +23,9 @@ const rankingEl = document.querySelector('#ranking');
 const statusEl = document.querySelector('#status');
 const totalEl = document.querySelector('#totalVotes');
 const refreshBtn = document.querySelector('#refreshBtn');
+const submitBtn = document.querySelector('#submitVotes');
+const submitStatus = document.querySelector('#submitStatus');
+const resultsEl = document.querySelector('#results');
 const dialog = document.querySelector('#imageDialog');
 const galleryEl = document.querySelector('#galleryBoards');
 const galleryStatus = document.querySelector('#galleryStatus');
@@ -51,8 +54,8 @@ function renderCards() {
       <div class="card-content card-foot">
         <div class="board-title">${escapeHtml(board.title)}</div>
         <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Votar em ${escapeHtml(board.title)}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
-          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Quero este</span>
-          <span class="count">0</span>
+          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Gosto</span>
+
         </button>
       </div>
     </article>
@@ -64,7 +67,7 @@ function renderCards() {
       <div class="gallery-board-bar">
         <h3 id="gallery-name-${board.id}" class="board-title">${escapeHtml(board.title)} <span class="gallery-position">${index + 1} / ${BOARDS.length}</span></h3>
         <button class="button is-primary is-outlined like-btn" data-like="${board.id}" type="button" aria-label="Votar em ${escapeHtml(board.title)}" aria-pressed="false" ${hasConfig ? '' : 'disabled'}>
-          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Quero este</span><span class="count">0</span>
+          <span class="heart" aria-hidden="true">&#9829;</span><span class="vote-label">Gosto</span>
         </button>
       </div>
       <img src="${escapeHtml(board.image)}" alt="Detalhes de ${escapeHtml(board.title)}" loading="lazy" decoding="async" width="1055" height="1491" />
@@ -90,17 +93,20 @@ function renderCounts() {
     const count = state.counts[board.id] || 0;
     total += count;
     document.querySelectorAll(`[data-like="${board.id}"]`).forEach(btn => {
-      btn.disabled = !client || state.pending.has(board.id);
-      btn.setAttribute('aria-busy', state.pending.has(board.id) ? 'true' : 'false');
-      btn.querySelector('.count').textContent = count;
-      btn.classList.toggle('liked', state.voted.has(board.id));
-      btn.classList.toggle('is-outlined', !state.voted.has(board.id));
-      btn.querySelector('.vote-label').textContent = state.voted.has(board.id) ? 'Escolhida' : 'Quero este';
-      btn.setAttribute('aria-label', `${state.voted.has(board.id) ? 'Remover voto de' : 'Votar em'} ${board.title}, ${count} votos`);
-      btn.setAttribute('aria-pressed', state.voted.has(board.id) ? 'true' : 'false');
+      btn.disabled = !client || !state.ready || state.submitting || state.submitted;
+      btn.setAttribute('aria-busy', state.submitting ? 'true' : 'false');
+      btn.classList.toggle('liked', state.selected.has(board.id));
+      btn.classList.toggle('is-outlined', !state.selected.has(board.id));
+      btn.querySelector('.vote-label').textContent = 'Gosto';
+      btn.setAttribute('aria-label', `${state.selected.has(board.id) ? 'Desmarcar' : 'Marcar gosto em'} ${board.title}`);
+      btn.setAttribute('aria-pressed', state.selected.has(board.id) ? 'true' : 'false');
     });
   });
   totalEl.textContent = total;
+  submitBtn.disabled = !client || !state.ready || state.submitting || state.submitted || (!state.selected.size && !state.dirty);
+  submitBtn.textContent = state.submitting ? 'Enviando votos...' : 'Enviar votos';
+  submitBtn.setAttribute('aria-busy', String(state.submitting));
+  refreshBtn.disabled = state.submitting || state.loading;
 
   const sorted = [...BOARDS].sort((a, b) => (state.counts[b.id] || 0) - (state.counts[a.id] || 0) || a.id - b.id);
   rankingEl.innerHTML = sorted.map((board, index) => `
@@ -112,58 +118,89 @@ function renderCounts() {
   `).join('');
 }
 
-async function loadVotes() {
+async function loadVotes({ afterSubmit = false } = {}) {
+  if (state.loading || (state.submitting && !afterSubmit)) return false;
   if (!client) {
-    statusEl.innerHTML = '<span class="error">Enquete ainda não conectada ao banco de votos.</span>';
+    statusEl.textContent = 'Enquete ainda não conectada ao banco de votos.';
     renderCounts();
-    return;
+    return false;
   }
-  statusEl.textContent = 'Atualizando votos…';
-  const { data, error } = await client.from('board_votes').select('board_id,voter_id');
-  if (error) {
-    statusEl.innerHTML = `<span class="error">Erro ao carregar votos.</span>`;
-    console.error(error);
-    return;
-  }
-  state.counts = {};
-  state.voted.clear();
-  const knownIds = new Set(BOARDS.map(board => board.id));
-  for (const row of data) {
-    if (!knownIds.has(row.board_id)) continue;
-    state.counts[row.board_id] = (state.counts[row.board_id] || 0) + 1;
-    if (row.voter_id === voterId) state.voted.add(row.board_id);
-  }
+  state.loading = true;
   renderCounts();
-  statusEl.textContent = 'Resultados atualizados agora.';
+  try {
+    const { data, error } = await client.from('board_votes').select('board_id,voter_id');
+    if (error) throw error;
+    state.counts = {};
+    state.voted.clear();
+    const knownIds = new Set(BOARDS.map(board => board.id));
+    for (const row of data) {
+      if (!knownIds.has(row.board_id)) continue;
+      state.counts[row.board_id] = (state.counts[row.board_id] || 0) + 1;
+      if (row.voter_id === voterId) state.voted.add(row.board_id);
+    }
+    if (!state.dirty && !state.submitting) state.selected = new Set(state.voted);
+    state.ready = true;
+    statusEl.textContent = state.submitted
+      ? 'Votos enviados. Suas escolhas foram confirmadas.'
+      : 'Marque os modelos de que gostou e envie seus votos no final.';
+    return true;
+  } catch (error) {
+    console.error(error);
+    statusEl.textContent = 'Erro ao carregar votos. Tente atualizar novamente.';
+    return false;
+  } finally {
+    state.loading = false;
+    renderCounts();
+  }
 }
 
-async function toggleVote(boardId, btn) {
-  if (!client || btn.disabled || state.pending.has(boardId)) return;
-  state.pending.add(boardId);
+function toggleVote(boardId, btn) {
+  if (!client || !state.ready || state.submitting || state.submitted || btn.disabled) return;
+  if (state.selected.has(boardId)) state.selected.delete(boardId);
+  else state.selected.add(boardId);
+  state.dirty = true;
+  submitBtn.hidden = false;
   galleryStatus.textContent = '';
+  submitStatus.textContent = 'Escolhas alteradas. Clique em Enviar votos para confirmar.';
   renderCounts();
-  const alreadyVoted = state.voted.has(boardId);
+}
+
+async function submitVotes() {
+  if (submitBtn.disabled || state.submitting || state.submitted) return;
+  state.submitting = true;
+  submitStatus.textContent = 'Enviando seus votos...';
+  renderCounts();
   try {
-    if (alreadyVoted) {
-      const { error } = await client.from('board_votes').delete().eq('board_id', boardId).eq('voter_id', voterId);
-      if (error) throw error;
-      state.voted.delete(boardId);
-      state.counts[boardId] = Math.max(0, (state.counts[boardId] || 1) - 1);
-    } else {
-      const { error } = await client.from('board_votes').insert({ board_id: boardId, voter_id: voterId });
-      if (error && error.code !== '23505') throw error;
-      if (!error) {
-        state.voted.add(boardId);
-        state.counts[boardId] = (state.counts[boardId] || 0) + 1;
+    // Reload saved votes so retrying a partial submission does not duplicate votes.
+    const { data, error } = await client.from('board_votes').select('board_id').eq('voter_id', voterId);
+    if (error) throw error;
+    const saved = new Set(data.map(row => row.board_id));
+    for (const board of BOARDS) {
+      if (state.selected.has(board.id) && !saved.has(board.id)) {
+        const { error } = await client.from('board_votes').insert({ board_id: board.id, voter_id: voterId });
+        if (error && error.code !== '23505') throw error;
+      } else if (!state.selected.has(board.id) && saved.has(board.id)) {
+        const { error } = await client.from('board_votes').delete().eq('board_id', board.id).eq('voter_id', voterId);
+        if (error) throw error;
       }
     }
-    renderCounts();
-  } catch (err) {
-    console.error(err);
-    galleryStatus.textContent = 'N\u00e3o foi poss\u00edvel registrar o voto. Tente novamente.';
-    statusEl.innerHTML = '<span class="error">Não foi possível registrar o voto. Tente novamente.</span>';
+    state.voted = new Set(state.selected);
+    state.dirty = false;
+    state.submitted = true;
+    submitBtn.hidden = true;
+    while (state.loading) await new Promise(resolve => setTimeout(resolve, 50));
+    const refreshed = await loadVotes({ afterSubmit: true });
+    submitStatus.textContent = refreshed
+      ? 'Votos enviados com sucesso! Confira os mais votados abaixo.'
+      : 'Votos enviados. Não foi possível atualizar os resultados; clique em Atualizar resultados.';
+    resultsEl.hidden = false;
+    document.querySelector('#rankingTitle').focus({ preventScroll: true });
+    resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (error) {
+    console.error(error);
+    submitStatus.textContent = 'Não foi possível concluir o envio. Suas escolhas foram mantidas; clique em Enviar votos para tentar novamente.';
   } finally {
-    state.pending.delete(boardId);
+    state.submitting = false;
     renderCounts();
   }
 }
@@ -192,7 +229,9 @@ dialog.addEventListener('keydown', event => {
 });
 document.querySelector('#previousBoard').addEventListener('click', () => navigateGallery(-1));
 document.querySelector('#nextBoard').addEventListener('click', () => navigateGallery(1));
-refreshBtn.addEventListener('click', loadVotes);
+refreshBtn.addEventListener('click', () => loadVotes());
+submitBtn.addEventListener('click', submitVotes);
+document.querySelector('#viewResults').addEventListener('click', () => { resultsEl.hidden = false; });
 closeDialog.addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
 
