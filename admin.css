@@ -16,6 +16,7 @@
 .board-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .board-fields .field { margin-bottom: 12px; }
 .board-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-bottom: 12px; font-size: 14px; }
+.votes-tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; font-weight: 700; font-variant-numeric: tabular-nums; background: var(--madder, #8a2140); color: #fff; }
 .board-actions { margin-bottom: 0 !important; }
 .board-actions .button { min-height: 36px; }
 @media (max-width: 768px) {

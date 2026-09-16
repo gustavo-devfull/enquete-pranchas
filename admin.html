@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#004f89" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
   <link rel="stylesheet" href="styles.css?v=b678bb86a371" />
   <link rel="stylesheet" href="admin.css?v=778c67c12eb9" />
@@ -18,14 +18,13 @@
   <nav class="navbar topbar wrap" aria-label="Navegação principal">
     <a class="navbar-item brand" href="admin.html"><img class="brand-logo" src="images/Logo-Ravi-Azul-Escuro.png" alt="Ravi" width="1080" height="899" /><span>ADMIN</span></a>
     <div class="topbar-actions">
-      <a class="button is-primary is-light is-rounded" href="index.html">Ver enquete &#8599;</a>
+      <a class="button is-primary is-light is-rounded" href="index.html">Ver enquete</a>
       <button class="button is-light is-rounded" id="logoutBtn" type="button" hidden>Sair</button>
     </div>
   </nav>
 
   <main class="wrap admin-main">
     <section class="box auth-card" id="authCard">
-      <span class="eyebrow">ACESSO RESTRITO</span>
       <h1 class="title is-4">Entrar no painel</h1>
       <p class="small mb-4">Use o e-mail cadastrado como administrador da enquete.</p>
       <form id="loginForm" novalidate>
@@ -48,7 +47,6 @@
     <div id="panel" hidden>
       <header class="admin-head">
         <div>
-          <span class="eyebrow">TAPETES DA ENQUETE</span>
           <h1 class="title is-4 mb-1">Gerenciar tapetes</h1>
           <p class="small" id="adminUser"></p>
         </div>

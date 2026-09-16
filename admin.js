@@ -155,7 +155,7 @@ function renderList() {
     <article class="box board-row ${board.active ? '' : 'is-inactive'}" data-id="${board.id}">
       <div class="board-thumb">
         <img src="${escapeHtml(board.image_url)}" alt="" loading="lazy" decoding="async" />
-        <span class="tag is-primary badge">${String(index + 1).padStart(2, '0')}</span>
+        <span class="tag badge">${String(index + 1).padStart(2, '0')}</span>
       </div>
       <div class="board-fields">
         <div class="field">
@@ -164,7 +164,7 @@ function renderList() {
         </div>
         <div class="board-meta">
           <label class="checkbox"><input type="checkbox" data-active ${board.active ? 'checked' : ''} /> Visível na enquete</label>
-          <span class="tag is-primary is-light">${votes[board.id] || 0} ♥ votos</span>
+          <span class="tag votes-tag">${votes[board.id] || 0} ♥ votos</span>
           <span class="small">ID ${board.id}</span>
         </div>
         <div class="buttons are-small board-actions">
