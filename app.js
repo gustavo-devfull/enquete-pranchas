@@ -42,14 +42,23 @@ async function loadBoards() {
   if (data.length) BOARDS = data.map(row => ({ id: row.id, title: row.title, image: row.image_url }));
 }
 
+function renderHeroSwatches() {
+  const el = document.querySelector('#heroSwatches');
+  if (!el) return;
+  const picks = BOARDS.slice(0, 6);
+  el.innerHTML = picks.map((board, index) => `
+    <span class="swatch" style="--i:${index}"><img src="${escapeHtml(board.image)}" alt="" loading="eager" decoding="async" width="1055" height="1491" /></span>
+  `).join('');
+}
+
 function renderCards() {
   boardsEl.innerHTML = BOARDS.map((board, index) => `
     <div class="column is-half-tablet is-one-third-desktop">
     <article class="card board-card" data-board="${board.id}">
       <button type="button" class="card-image image-wrap" data-open="${board.id}" aria-label="Ampliar ${escapeHtml(board.title)}">
         <img src="${escapeHtml(board.image)}" alt="${escapeHtml(board.title)}" loading="${index < 2 ? 'eager' : 'lazy'}" decoding="async" width="1055" height="1491" />
-        <span class="tag is-primary badge">${String(index + 1).padStart(2, '0')}</span>
-        <span class="tag is-white zoom-hint" aria-hidden="true">Ampliar &#8599;</span>
+        <span class="tag badge">${String(index + 1).padStart(2, '0')}</span>
+        <span class="tag zoom-hint" aria-hidden="true">Ampliar</span>
       </button>
       <div class="card-content card-foot">
         <div class="board-title">${escapeHtml(board.title)}</div>
@@ -110,14 +119,22 @@ function renderCounts() {
 
   const sorted = BOARDS.filter(board => (state.counts[board.id] || 0) > 0)
     .sort((a, b) => state.counts[b.id] - state.counts[a.id] || a.id - b.id);
-  rankingEl.innerHTML = sorted.map((board, index) => `
+  const maxVotes = sorted.length ? Math.max(...sorted.map(board => state.counts[board.id] || 0)) : 1;
+  rankingEl.innerHTML = sorted.map((board, index) => {
+    const votes = state.counts[board.id] || 0;
+    const pct = Math.max(6, Math.round((votes / maxVotes) * 100));
+    return `
     <div class="rank-row">
-      <div class="rank-pos">#${index + 1}</div>
+      <div class="rank-pos">${String(index + 1).padStart(2, '0')}</div>
       <img class="rank-image" src="${escapeHtml(board.image)}" alt="${escapeHtml(board.title)}" loading="lazy" decoding="async" width="1055" height="1491" />
-      <div class="rank-name">${escapeHtml(board.title)}</div>
-      <div class="tag is-primary is-light rank-votes">${state.counts[board.id] || 0} ♥</div>
+      <div class="rank-info">
+        <div class="rank-name">${escapeHtml(board.title)}</div>
+        <div class="rank-bar"><span class="rank-fill" style="width:${pct}%"></span></div>
+      </div>
+      <div class="rank-votes">${votes} ♥</div>
     </div>
-  `).join('') || '<p class="ranking-empty">Nenhum voto registrado ainda.</p>';
+  `;
+  }).join('') || '<p class="ranking-empty">Nenhum voto registrado ainda.</p>';
 }
 
 async function loadVotes({ afterSubmit = false } = {}) {
@@ -238,6 +255,7 @@ dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close();
 
 (async () => {
   await loadBoards();
+  renderHeroSwatches();
   renderCards();
   loadVotes();
   setInterval(loadVotes, 20000);
